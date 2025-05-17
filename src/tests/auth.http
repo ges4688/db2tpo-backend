@@ -1,0 +1,27 @@
+### Variables
+@userId = YOUR_USER_ID_HERE
+@authToken = YOUR_JWT_TOKEN_HERE
+
+### Login (create session)
+POST http://localhost:3001/api/auth/login
+Content-Type: application/json
+
+{
+  "userId": "{{userId}}"
+}
+
+### Get session data
+GET http://localhost:3001/api/session
+Authorization: Bearer {{authToken}}
+
+### Get recent recipes
+GET http://localhost:3001/api/recent-recipes
+Authorization: Bearer {{authToken}}
+
+### Test flow example:
+# 1. Create a user (from users.http)
+# 2. Use the returned user ID to login here
+# 3. Use the returned JWT token for subsequent requests
+# 4. Create some recipes (from recipes.http)
+# 5. View recipes will automatically update recent-recipes
+# 6. Check session and recent-recipes endpoints 

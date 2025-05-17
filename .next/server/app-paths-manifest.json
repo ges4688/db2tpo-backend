@@ -1,0 +1,6 @@
+{
+  "/api/auth/login/route": "app/api/auth/login/route.js",
+  "/api/recent-recipes/route": "app/api/recent-recipes/route.js",
+  "/api/recipes/route": "app/api/recipes/route.js",
+  "/api/recipes/[id]/route": "app/api/recipes/[id]/route.js"
+}

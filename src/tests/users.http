@@ -1,0 +1,24 @@
+### Create a new user
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+### Get user by ID (replace ID with a valid user ID)
+GET http://localhost:3001/api/users/65f3a8e1b164b6e5c2c65123
+
+### Update user (replace ID with a valid user ID)
+PUT http://localhost:3001/api/users/65f3a8e1b164b6e5c2c65123
+Content-Type: application/json
+
+{
+  "username": "updateduser",
+  "email": "updated@example.com"
+}
+
+### Delete user (replace ID with a valid user ID)
+DELETE http://localhost:3001/api/users/65f3a8e1b164b6e5c2c65123 

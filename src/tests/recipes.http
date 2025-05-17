@@ -1,0 +1,45 @@
+### Variables
+@authToken = YOUR_JWT_TOKEN_HERE
+@userId = YOUR_USER_ID_HERE
+
+### Create a new recipe
+POST http://localhost:3001/api/recipes
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "title": "Test Recipe",
+  "ingredients": ["ingredient 1", "ingredient 2"],
+  "instructions": "Step 1: Do something\nStep 2: Do something else"
+}
+
+### Get all recipes
+GET http://localhost:3001/api/recipes
+Authorization: Bearer {{authToken}}
+
+### Get recipes by owner
+GET http://localhost:3001/api/recipes?ownerId={{userId}}
+Authorization: Bearer {{authToken}}
+
+### Get recipes by title search
+GET http://localhost:3001/api/recipes?title=Test
+Authorization: Bearer {{authToken}}
+
+### Get recipe by ID (replace ID with a valid recipe ID)
+GET http://localhost:3001/api/recipes/65f3a8e1b164b6e5c2c65123
+Authorization: Bearer {{authToken}}
+
+### Update recipe (replace ID with a valid recipe ID)
+PUT http://localhost:3001/api/recipes/65f3a8e1b164b6e5c2c65123
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "title": "Updated Recipe",
+  "ingredients": ["new ingredient 1", "new ingredient 2"],
+  "instructions": "Updated instructions"
+}
+
+### Delete recipe (replace ID with a valid recipe ID)
+DELETE http://localhost:3001/api/recipes/65f3a8e1b164b6e5c2c65123
+Authorization: Bearer {{authToken}} 
