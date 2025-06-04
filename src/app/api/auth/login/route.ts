@@ -50,12 +50,13 @@ export async function POST(request: Request) {
     // Generate mock JWT
     const jwt = generateMockJWT(user._id.toString());
 
-    // Create session in Redis
+    // Create session in Redis with empty recent and favorite recipes array
     await setSession(user._id.toString(), {
       jwt,
       preferences: {
         theme: 'light',
-        recentRecipes: []
+        recentRecipes: [],
+        favoriteRecipes: []
       }
     });
 
