@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { ApiResponse } from '@/types/api';
 import { setSession } from '@/lib/redis';
 import { User } from '@/models/User';
+import { Recipe } from '@/models/Recipe';
 import { connectToDatabase } from '@/lib/mongodb';
 
 function generateMockJWT(userId: string): string {
@@ -29,7 +30,7 @@ export async function POST(request: Request) {
     }
 
     // Find user by email
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email, password });
     if (!user) {
       return NextResponse.json<ApiResponse>({
         returnCode: 'ERROR',
@@ -50,13 +51,23 @@ export async function POST(request: Request) {
     // Generate mock JWT
     const jwt = generateMockJWT(user._id.toString());
 
-    // Create session in Redis with empty recent and favorite recipes array
+    // Obtener recetas favoritas del usuario
+    const favoriteRecipes = await Recipe.find({ _id: { $in: user.favoriteRecipes || [] } });
+
+    // Crear la sesión en Redis con los favoritos
     await setSession(user._id.toString(), {
       jwt,
       preferences: {
         theme: 'light',
         recentRecipes: [],
-        favoriteRecipes: []
+        favoriteRecipes: favoriteRecipes.map(r => ({
+          _id: r._id.toString(),
+          title: r.title,
+          ingredients: r.ingredients,
+          instructions: r.instructions,
+          ownerId: r.ownerId.toString(),
+          createdAt: r.createdAt
+        }))
       }
     });
 
@@ -77,4 +88,4 @@ export async function POST(request: Request) {
       message: 'Error during login'
     }, { status: 500 });
   }
-} 
+}

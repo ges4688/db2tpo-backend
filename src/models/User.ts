@@ -30,7 +30,11 @@ const userSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  favoriteRecipes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Recipe'
+  }]
 });
 
-export const User = mongoose.models.User || mongoose.model<IUser>('User', userSchema); 
+export const User = mongoose.models.User || mongoose.model<IUser>('User', userSchema);
