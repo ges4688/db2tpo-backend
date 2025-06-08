@@ -3,7 +3,7 @@ import { Recipe } from '@/models/Recipe';
 import { connectToDatabase } from '@/lib/mongodb';
 import { ApiResponse } from '@/types/api';
 import { getAuthenticatedUserId, unauthorized } from '@/middleware/auth';
-import { updateRecentRecipes } from '@/lib/redis';
+import { updateRecentRecipes, updateRecipeInAllSessions, removeRecipeFromAllSessions } from '@/lib/redis';
 
 export async function GET(
   request: Request,
@@ -87,6 +87,18 @@ export async function PUT(
       { new: true }
     );
 
+    // Consistencia fuerte: actualizar en Redis
+    if (updatedRecipe) {
+      await updateRecipeInAllSessions({
+        _id: updatedRecipe._id.toString(),
+        title: updatedRecipe.title,
+        ingredients: updatedRecipe.ingredients,
+        instructions: updatedRecipe.instructions,
+        ownerId: updatedRecipe.ownerId.toString(),
+        createdAt: updatedRecipe.createdAt
+      });
+    }
+
     return NextResponse.json<ApiResponse>({
       returnCode: 'SUCCESS',
       data: updatedRecipe,
@@ -132,6 +144,9 @@ export async function DELETE(
     }
 
     await Recipe.findByIdAndDelete(params.id);
+
+    // Consistencia fuerte: eliminar de Redis
+    await removeRecipeFromAllSessions(params.id);
 
     return NextResponse.json<ApiResponse>({
       returnCode: 'SUCCESS',
